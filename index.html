@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>hululu hululu hululu</title>
+    <Style>
+        *{ margin: 0px;
+            padding: 0px;
+        }
+        #hy{
+       height: 40px;
+       width: 200px;
+       border: solid black 3px;
+       border-radius: 10px;
+      text-transform: uppercase;
+      text-align: center;
+      padding: 5px 10px 5px 5px;
+
+        }
+         #ky{
+       height: 30px;
+       width: 130px;
+       border-radius: 20px;
+      background-color:rgb(26, 196, 26);
+      text-align: center;
+      padding: 5px 10px 5px 5px;
+
+        }
+        #ty{
+       height: 30px;
+       width: 150px;
+       border-radius: 20px;
+      background-color:rgb(26, 196, 26);
+      text-align: center;
+      padding: 5px 10px 5px 5px;
+
+        }
+    </Style>
+
+</head>
+<body>
+    <button id="ky" class="by" onclick="cartQuantity++;document.querySelector('#cart-summary')
+    .innerText=`you have ${cartQuantity} items`;">Add to Bag  </button>
+     
+    <button id="hy" class="by"onclick="cartQuantity--;
+    document.querySelector('#cart-summary')
+    .innerText=`you have ${cartQuantity} items`;">
+        WISHLIST</button>
+     <button id="ty" class="by"onclick="cartQuantity=cartQuantity+2;
+    document.querySelector('#cart-summary')
+    .innerText=`you have ${cartQuantity} items`;">Add 1+1 sale item</button>
+    <h1 id="cart-summary"> </h1>
+    <script>
+        let cartQuantity=0;
+        document.querySelector('#cart-summary').innerText=`you have ${cartQuantity} items`;
+
+    </script>
+</body>
+</html>
