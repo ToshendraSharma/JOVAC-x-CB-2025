@@ -1,0 +1,18 @@
+  * {
+            margin: 0;
+            padding: 0;
+            font-family: Verdana, Geneva, Tahoma, sans-serif 
+        }
+    #ki h1{
+        background-color: rgb(5, 5, 44);
+        text-align: center;
+        text-transform: capitalize;
+        color: brown;
+    }
+    #outer{
+        font: size 25px;
+    }
+     #inner{
+        font-size: 10px;
+        
+    }
