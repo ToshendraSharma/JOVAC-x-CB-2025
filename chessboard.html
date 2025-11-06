@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .white{
+            background-color: white;
+            height: 40px;
+            width:40px;
+            border:1px solid black;
+        }
+        .black{
+              background-color:  black;
+            height: 40px;
+            width:40px;
+            border:1px solid black;
+
+        }
+        table{
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+    <table id="demo">
+
+    </table>
+    <script>
+        const tab=document.getElementById("demo")
+        
+        for(let row=0;row<8;row++){
+            const roww=document.createElement("tr");
+            for(let col=0;col<8;col++){
+                const cell =document.createElement("td");
+                if((row+col)%2==0){
+                    cell.classList.add('white');
+                }
+                else{
+                    cell.classList.add('black');
+                }
+                roww.appendChild(cell);
+
+            }
+            tab.appendChild(roww);
+        }
+    </script>
+</body>
+</html>
