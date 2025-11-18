@@ -1,263 +1,106 @@
-// var s1 = "Toshendra";
-// // console.log(s1);
-// var s1 ="Ayush";
-// console.log(s1);
 
-// let s2 = "ram";
-// console.log(s2);
-// let s2 = "Piyush";
-// console.log(s2);
+import express from "express";
+import cors from "cors";
 
-// s2 ="Adit";
-// console.log(s2);
+const app = express();
+const PORT = process.env.PORT || 4000;
 
-// const s3 ="priya";
 
-// console.log(s3);
 
-// const s3 = "direndra"
+app.use(cors({
+  origin: true, 
+  methods: ['GET','POST','PUT','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization']
+}));
 
-// console.log(s3);
 
+app.use(express.json());
 
-// s3 = "arun";
 
-// console.log(s3)
+const orders = [];
+let orderCounter = 1000;
 
 
-// var s1 ="patuman";
+function processPaymentSim(amount) {
+  console.log(`[Payment] Charging ₹${amount}...`);
+  if (Math.random() < 0.1) {
+    const err = new Error("Payment declined by bank");
+    err.code = "PAYMENT_DECLINED";
+    throw err;
+  }
+  return true;
+}
 
-// let s1 = "hitesh";
+function validateOrderPayload(payload) {
+  if (!payload || !Array.isArray(payload.items) || payload.items.length === 0) {
+    return "Cart is empty or items missing";
+  }
+  if (typeof payload.total !== "number" && typeof payload.total !== "string") {
+    return "Total is missing or invalid";
+  }
+  return null;
+}
 
-// console.log(s1);
 
+app.post("/api/checkout", async (req, res) => {
+  const payload = req.body;
 
-// var a1 = 100;
+  const errMsg = validateOrderPayload(payload);
+  if (errMsg) {
+    return res.status(400).json({ success: false, message: errMsg });
+  }
 
-// console.log(a1);
 
-// function sumOfTwo(num1,num2){
-//     let ans = num1+num2;
-//     return ans;
-// }
+  const total = Number(payload.total || payload.subtotal || 0);
 
-// let sumOfTwoBy = sumOfTwo(2,3);
-// console.log(sumOfTwoBy);
+  try {
+   
+    processPaymentSim(total);
 
-// console.log(a1);
+    await new Promise(r => setTimeout(r, 400));
 
-// var a2 = 20;
-// console.log(a2);
+    const orderId = `C${orderCounter++}`;
+    const orderRecord = {
+      orderId,
+      timestamp: new Date().toISOString(),
+      items: payload.items,
+      total,
+      meta: payload.meta || null,
+      status: "Processed"
+    };
+    orders.push(orderRecord);
 
-// console.log(a1);
+    console.log(`[Order] Saved ${orderId} — items:${payload.items.length} total:₹${total}`);
 
-// var a1 = 20;
+    return res.status(201).json({
+      success: true,
+      orderId,
+      message: "Order processed successfully."
+    });
 
-// console.log(a1);
+  } catch (err) {
+    console.error("[Checkout Error]", err?.message || err);
+    const status = err.code === "PAYMENT_DECLINED" ? 402 : 500;
+    return res.status(status).json({
+      success: false,
+      message: `Checkout failed: ${err.message || "Internal error"}`
+    });
+  }
+});
 
-// console.log(a2);
+app.get("/api/orders", (req, res) => {
+  return res.json({ success: true, count: orders.length, orders });
+});
 
 
+app.get("/api/health", (req, res) => res.json({ ok: true, time: new Date().toISOString() }));
 
 
-// console.log(x);
-
-// getName();
-
-// let a2 = 30;
-
-// console.log(a2);
-
-// var x =10;
-
-// function getName(){
-//     console.log("HELO");
-// };
-
-// var glaStudent = () =>{
-//     console.log("I AM GLA STUDENT")
-// }
-
-// console.log(glaStudent);
-
-// console.log(glaStudent());
-
-// glaStudent();
-
-
-// var xyz =20;
-
-// xyz();
-
-//LEXICAL SCOPE
-
-
-// function a(){
-//     var x =10;
-//     console.log(x);
-//     // console.log(y);
-//     // var y =3000;
-//     b();
-//     function b(){
-//         var y =20;
-//         console.log(y);
-//         c();
-//         function c(){
-//             var z =30;
-//             console.log(z);
-//             console.log(y);
-//             console.log(x);
-//         }
-//     }
-// }
-
-// a();
-
-// let a2 = 30;
-
-// console.log(a2);
-
-// var a =10;
-
-// function aGetName(){
-//     console.log("HELO");
-// };
-
-// var aGlaStudent = () =>{
-//     console.log("I AM GLA STUDENT")
-// }
-
-// aGetName();
-
-// aGlaStudent();
-
-
-// var a = 20;
-
-// console.log(a);
-
-// function aCall(){
-//     var aa =10;
-//     var bb = 20;
-//     console.log("Answer: ",aa+bb);
-// }
-
-// aCall();
-
-// var a = 4000;
-
-// {
-//     var a =100;
-//     var b =200;
-//     var c =300;
-// }
-
-// console.log(a);
-// console.log(b);
-// console.log(c);
-
-
-////////////////////////////////////////////////////////////
-
-// CLOSURES IN JS 
-
-// function a(){
-//     var x =7;
-//     var y =6;
-//     function b(){
-//         var y =8;
-//         console.log(y);
-//     }
-//     y =10;
-//     b();
-
-// }
-// a();
-
-
-// function x(){
-//     var a =7;
-//     function y(){
-//         console.log(a);
-//     }
-//     a =100;
-//     return y;
-// }
-
-// var z =x();
-// console.log(z);
-
-// z();
-
-
-//CASE 3: CLOSURE:
-
-// function z(){
-//     var b =900;
-
-//     function x(){
-//         var a = 7;
-
-//         function y(){
-//             console.log(a,b);
-//         }
-//         y();
-//     }
-//     x();
-// }
-// z();
-
-
-////////////////////////////////////
-
-//SETTIMEOUT
-
-// setTimeout(()=>{
-//     console.log("Hello I am setTimeout Function i'll after 2 secs");
-// },6000);
-
-
-// //SETINTERVAL
-
-// setInterval(()=>{
-//     console.log("Hello I am setInterval function i'll run after 2 secs");
-// },2000)
-
-
-// FORLOOP
-
-
-// for (var i = 0; i <= 4; i++) {
-//     function closuress(i) {
-//         setTimeout(() => {
-//             console.log(i);
-//         }, i * 1000)
-//     }
-//     closuress(i);
-// }
-
-// JS IS SINGLE THREADED OR NOT
-
-// console.log("HELLO");
-
-// setTimeout(()=>{
-//     console.log("I AM SET TIMEOUT");
-// },2000);
-
-// function x(y){
-//     console.log("I AM X");
-//     y()
-// }
-
-// x(function (){
-//     console.log("I AM Y: ANONYMOUS")
-// });
-
-// console.log("BYE");
-
-
-//EVENT LISTENERS
-
-document.getElementById("functionCall").addEventListener("click",function abc(){
-    console.log("EVENT HAPPENED!!")
-})
+app.listen(PORT, () => {
+  console.log("=====================================");
+  console.log(`🚀 Backend running at http://localhost:${PORT}`);
+  console.log("POST /api/checkout  -> accepts order JSON");
+  console.log("GET  /api/orders    -> view saved orders (dev only)");
+  console.log("GET  /api/health    -> health check");
+  console.log("=====================================");
+});
